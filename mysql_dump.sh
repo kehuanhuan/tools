@@ -4,7 +4,7 @@ user="root"
 password="e10adc3949ba59"
 host="127.0.0.1"
 db_name="ball"
-
+odate=`date "+%Y-%m-%d" -d "-1 days"`
 backup_path="/home/tools"
 rdate=`date "+%Y-%m-%d+%H%M%S"`
 rdateday=`date "+%Y-%m-%d"`
@@ -25,17 +25,14 @@ echo "---------end dump--------"
 
 if [ $1 -a $1 = $ignoreFlag ]
 then
-	echo "--------start upload to oss---------"
-	/usr/local/bin/ossutil64 cp -rf $backup_path/$rdateday oss://faya-a/mysqldump/
-	echo "--------end upload to oss----------"
+    echo "--------start upload to oss---------"
+    /usr/local/bin/ossutil64 cp -rf $backup_path/$odate oss://faya-a/mysqldump/
+    echo "--------end upload to oss----------"
+
+    echo "--------start clear old data---------"
+    echo $odate
+    rm -rf $backup_path/$odate
+    echo "--------end clear old data---------"
 else
-	echo "ignore upload to oss"
+    echo "ignore upload to oss"
 fi
-
-odate=`date "+%Y-%m-%d" -d "-1 days"`
-
-echo "--------start clear old data---------"
-echo $odate
-rm -rf $backup_path/$odate
-echo "--------end clear old data---------"
-
